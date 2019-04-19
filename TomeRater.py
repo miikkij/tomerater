@@ -2,7 +2,7 @@ class User(object):
     def __init__(self, name, email):
         self.name = name
         self.email = email
-        self.books = {}
+        self.books = {}  # Book : Rating
 
     def get_email(self):
         return self.email
@@ -37,9 +37,18 @@ class User(object):
             return True
         return False
 
+    def __hash__(self):
+        return hash(self.email)
+
+class BookInvalidInputParameters(Exception):
+    """
+    Title, ISBN or Price is invalid
+    """
 
 class Book:
     def __init__(self, title, isbn, price=.0):
+        if not isinstance(title, str) or not isinstance(isbn, int):
+            raise BookInvalidInputParameters("BookInvalidInputParameters Exception info - Title: {title}, ISBN: {isbn}, Price: {price}".format(title=title, isbn=isbn, price=price))
         self.title = title
         self.isbn = isbn
         self.ratings = []
@@ -134,14 +143,14 @@ class TomeRater:
             title=title, isbn=isbn))
 
     def create_novel(self, title, author, isbn, price=0):
-        if self.can_create_book(title, isbn):
+        if self.can_create_book(title, isbn) and isinstance(author, str):
             new_book = Fiction(title, author, isbn, price)
             return new_book
         print("Error when trying to create a new novel ({title},{isbn}): Book with same ISBN already exists.".format(
             title=title, isbn=isbn))
 
     def create_non_fiction(self, title, subject, level, isbn, price=0):
-        if self.can_create_book(title, isbn):
+        if self.can_create_book(title, isbn) and isinstance(subject, str) and isinstance(level, str):
             new_book = NonFiction(title, subject, level, isbn, price)
             return new_book
         print(
@@ -149,6 +158,8 @@ class TomeRater:
                 title=title, isbn=isbn))
 
     def add_book_to_user(self, book, email, rating=None):
+        if not isinstance(book, Book) and not isinstance(email, str):
+            return
         user = self.users.get(email)
         if not user:
             print("No user with email {email}".format(email=email))
@@ -170,6 +181,8 @@ class TomeRater:
         return True
 
     def add_user(self, name, email, user_books=None):
+        if not isinstance(name, str) and not isinstance(email, str):
+            return
         if not self.valid_email_address(email):
             return
         user = User(name, email)
@@ -181,15 +194,28 @@ class TomeRater:
     # If n is 0 or less or bigger than amount of books, all books will be returned as sorted list
     def get_n_most_read_books(self, n):
         sorted_list = []
+        if not isinstance(n, int):
+            return sorted_list
         for book, counter in sorted(self.books.items(), key=lambda item: item[1]):
             sorted_list.append([book, counter])
-        if 0 < n > len(self.books):
-            n = len(self.books)
-        sorted_list.reverse()
-        return sorted_list[:n]
+        return self.get_n_from_list(n, sorted_list, len(self.books))
 
     def get_n_most_prolific_readers(self, n):
-        pass
+        user_read_most = {}
+        sorted_list = []
+        if not isinstance(n, int):
+            return sorted_list
+        for email, user in self.users.items():
+            user_read_most[user] = len(user.get_books_and_ratings())
+        for user, count_read in sorted(user_read_most.items(), key=lambda item: item[1]):
+            sorted_list.append([user, count_read])
+        return self.get_n_from_list(n, sorted_list, len(user_read_most))
+
+    def get_n_from_list(self, n, sorted_list, max_n):
+        if 0 < n > max_n:
+            n = max_n
+        sorted_list.reverse()
+        return sorted_list[:n]
 
     def get_n_most_expensive_books(self, n):
         book_price_dict = {}
@@ -198,12 +224,11 @@ class TomeRater:
             book_price_dict[book] = book.get_price()
         for book, price in sorted(book_price_dict.items(), key=lambda item: item[1]):
             sorted_list.append([book, book.get_price()])
-        if 0 < n > len(self.books):
-            n = len(self.books)
-        sorted_list.reverse()
-        return sorted_list[:n]
+        return self.get_n_from_list(n, sorted_list, len(book_price_dict))
 
     def get_worth_of_user(self, email):
+        if not self.users.get(email, False):
+            return -1
         user = self.users[email]
         worth = 0
         for book, rating in user.get_books_and_ratings():
