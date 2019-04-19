@@ -1,9 +1,8 @@
 class User(object):
-    books = {}
-
     def __init__(self, name, email):
         self.name = name
         self.email = email
+        self.books = {}
 
     def get_email(self):
         return self.email
@@ -31,9 +30,8 @@ class User(object):
                                                                                     read_counter=len(self.books))
 
     def __eq__(self, other_user):
-        if isinstance(other_user, User):
-            if other_user.name == self.name and other_user.email == self.email:
-                return True
+        if isinstance(other_user, User) and other_user.name == self.name and other_user.email == self.email:
+            return True
         return False
 
 
@@ -125,19 +123,23 @@ class TomeRater:
         if self.can_create_book(title, isbn):
             new_book = Book(title, isbn)
             return new_book
-        print("Error when trying to create a new book ({title},{isbn}): Book with same ISBN already exists.".format(title=title, isbn=isbn))
+        print("Error when trying to create a new book ({title},{isbn}): Book with same ISBN already exists.".format(
+            title=title, isbn=isbn))
 
     def create_novel(self, title, author, isbn):
         if self.can_create_book(title, isbn):
             new_book = Fiction(title, author, isbn)
             return new_book
-        print("Error when trying to create a new novel ({title},{isbn}): Book with same ISBN already exists.".format(title=title, isbn=isbn))
+        print("Error when trying to create a new novel ({title},{isbn}): Book with same ISBN already exists.".format(
+            title=title, isbn=isbn))
 
     def create_non_fiction(self, title, subject, level, isbn):
         if self.can_create_book(title, isbn):
             new_book = NonFiction(title, subject, level, isbn)
             return new_book
-        print("Error when trying to create a new non fiction book ({title},{isbn}): Book with same ISBN already exists.".format(title=title, isbn=isbn))
+        print(
+            "Error when trying to create a new non fiction book ({title},{isbn}): Book with same ISBN already exists.".format(
+                title=title, isbn=isbn))
 
     def add_book_to_user(self, book, email, rating=None):
         user = self.users.get(email)
@@ -149,20 +151,37 @@ class TomeRater:
             book_read_counter = self.books.get(book, 0)
             self.books[book] = book_read_counter + 1
 
-    def add_user(self, name, email, user_books=None):
+    def valid_email_address(self, email):
         email_rules_accepted_domains = [".org", ".com", ".edu"]
         if "@" not in email or not any(substring in email for substring in email_rules_accepted_domains):
             print("Invalid email ({email}) address when adding user. It must have @-character and has an ending of "
                   ".com, .edu or .org".format(email=email))
-            return
+            return False
         if email in self.users.keys():
             print("Error when trying to add a new user. User with email: {email} already exists!".format(email=email))
+            return False
+        return True
+
+    def add_user(self, name, email, user_books=None):
+        if not self.valid_email_address(email):
             return
         user = User(name, email)
         self.users[email] = user
         if user_books is not None:
             for book in user_books:
                 self.add_book_to_user(book, email, book.get_average_rating())
+
+    def get_n_most_read_books(self, n):
+        pass
+
+    def get_n_most_prolific_readers(self, n):
+        pass
+
+    def get_n_most_expensive_books(self, n):
+        pass
+
+    def get_worth_of_user(self, email):
+        pass
 
     def print_catalog(self):
         print("Current book catalog:")
@@ -204,7 +223,8 @@ class TomeRater:
         return most_positive_user
 
     def __repr__(self):
-        return "TomeRater - Users {usercount}. Books {bookscount}".format(usercount=len(self.users), bookscount=len(self.books))
+        return "TomeRater - Users {user_count}. Books {books_count}".format(user_count=len(self.users),
+                                                                          books_count=len(self.books))
 
     # If users and books matches it is considered as equal
     def __eq__(self, other):
