@@ -9,10 +9,10 @@ TomeRater.py and populate.py edited to match the instructions / requirements.
 Changes to functionality and more tests added as extra. 
 
 # To-Do
-- More tests
-  - TomeRater comparison (equals)
-  - Tests for each class
-- Exceptions / Exception handling, investigate if it makes sense to add 
-- Sophisticated analysis methods
-- Price variable for the book
-- Code improvements (python way)
+x More tests
+  x TomeRater comparison (equals)
+  o Didn't do class specific tests for each class
+x Exceptions / Exception handling, investigate if it makes sense to add 
+x Sophisticated analysis methods
+x Price variable for the book
+x Code improvements (python way, at least tried)
