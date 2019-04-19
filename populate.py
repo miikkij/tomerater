@@ -75,7 +75,7 @@ print(Tome_Rater.get_n_most_prolific_readers(3))
 
 # Price
 print(Tome_Rater.get_n_most_expensive_books(3))
-print(Tome_Rater.get_worth_of_user("marvin@mit.edu")) #Prints the sum of the costs of all the books read by this user
+print(Tome_Rater.get_worth_of_user("marvin@mit.edu"))  # Prints the sum of the costs of all the books read by this user
 
 # Uncomment these to test your functions:
 Tome_Rater.print_catalog()

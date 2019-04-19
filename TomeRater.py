@@ -40,15 +40,19 @@ class User(object):
     def __hash__(self):
         return hash(self.email)
 
+
 class BookInvalidInputParameters(Exception):
     """
     Title, ISBN or Price is invalid
     """
 
+
 class Book:
     def __init__(self, title, isbn, price=.0):
         if not isinstance(title, str) or not isinstance(isbn, int):
-            raise BookInvalidInputParameters("BookInvalidInputParameters Exception info - Title: {title}, ISBN: {isbn}, Price: {price}".format(title=title, isbn=isbn, price=price))
+            raise BookInvalidInputParameters(
+                "BookInvalidInputParameters Exception info - Title: {title}, ISBN: {isbn}, Price: {price}".format(
+                    title=title, isbn=isbn, price=price))
         self.title = title
         self.isbn = isbn
         self.ratings = []
