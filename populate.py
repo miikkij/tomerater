@@ -33,15 +33,22 @@ Tome_Rater.add_user("E: User email without ending and @", "justtextasemail")  # 
 Tome_Rater.add_user("Marvin Minsky", "marvin@mit.edu", user_books=[book1, book3, novel1, novel2, nonfiction1, nonfiction3])
 
 # Add books to a user one by one, with ratings:
-Tome_Rater.add_book_to_user(book1, "alan@turing.com", 1)
-Tome_Rater.add_book_to_user(book2, "alan@turing.com", 4)
-Tome_Rater.add_book_to_user(book3, "alan@turing.com", 3)
-Tome_Rater.add_book_to_user(novel1, "alan@turing.com", 3)
-Tome_Rater.add_book_to_user(nonfiction1, "alan@turing.com", 3)
-Tome_Rater.add_book_to_user(nonfiction2, "alan@turing.com", 4)
-Tome_Rater.add_book_to_user(novel3, "alan@turing.com", 1)
-Tome_Rater.add_book_to_user(novel4, "alan@turing.com", 2)
-
+Tome_Rater.add_book_to_user(book1, "alan@turing.com", 1) #+0
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 0")
+Tome_Rater.add_book_to_user(book2, "alan@turing.com", 4) #+2.54
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 2.54")
+Tome_Rater.add_book_to_user(book3, "alan@turing.com", 3) #+64.42
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 66.96")
+Tome_Rater.add_book_to_user(novel1, "alan@turing.com", 3) #+0
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 66.96")
+Tome_Rater.add_book_to_user(nonfiction1, "alan@turing.com", 3) #+0
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 66.96")
+Tome_Rater.add_book_to_user(nonfiction2, "alan@turing.com", 4) #+0
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 66.96")
+Tome_Rater.add_book_to_user(novel3, "alan@turing.com", 1) #+0
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 66.96")
+Tome_Rater.add_book_to_user(novel4, "alan@turing.com", 2) #+12.45
+print(Tome_Rater.get_worth_of_user("alan@turing.com"), "should be 79.41")
 
 Tome_Rater.add_book_to_user(novel2, "marvin@mit.edu", 2)
 Tome_Rater.add_book_to_user(novel3, "marvin@mit.edu", 4)

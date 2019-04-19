@@ -15,6 +15,9 @@ class User(object):
     def read_book(self, book, rating=None):
         self.books[book] = rating
 
+    def get_books_and_ratings(self):
+        return self.books.items()
+
     def get_average_rating(self):
         total = 0
         valid_ratings_counter = 0
@@ -201,7 +204,11 @@ class TomeRater:
         return sorted_list[:n]
 
     def get_worth_of_user(self, email):
-        pass
+        user = self.users[email]
+        worth = 0
+        for book, rating in user.get_books_and_ratings():
+            worth = worth + book.get_price()
+        return worth
 
     def print_catalog(self):
         print("Current book catalog:")
