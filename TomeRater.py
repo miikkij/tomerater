@@ -36,16 +36,20 @@ class User(object):
 
 
 class Book:
-    def __init__(self, title, isbn):
+    def __init__(self, title, isbn, price=.0):
         self.title = title
         self.isbn = isbn
         self.ratings = []
+        self.price = price
 
     def get_title(self):
         return self.title
 
     def get_isbn(self):
         return self.isbn
+
+    def get_price(self):
+        return self.price
 
     def set_isbn(self, isbn):
         old_isbn = self.isbn
@@ -78,8 +82,8 @@ class Book:
 
 
 class Fiction(Book):
-    def __init__(self, title, author, isbn):
-        super().__init__(title, isbn)
+    def __init__(self, title, author, isbn, price=0):
+        super().__init__(title, isbn, price)
         self.author = author
 
     def get_author(self):
@@ -90,8 +94,8 @@ class Fiction(Book):
 
 
 class NonFiction(Book):
-    def __init__(self, title, subject, level, isbn):
-        super().__init__(title, isbn)
+    def __init__(self, title, subject, level, isbn, price=0):
+        super().__init__(title, isbn, price)
         self.subject = subject
         self.level = level
 
@@ -119,23 +123,23 @@ class TomeRater:
         else:
             return True
 
-    def create_book(self, title, isbn):
+    def create_book(self, title, isbn, price=0):
         if self.can_create_book(title, isbn):
-            new_book = Book(title, isbn)
+            new_book = Book(title, isbn, price)
             return new_book
         print("Error when trying to create a new book ({title},{isbn}): Book with same ISBN already exists.".format(
             title=title, isbn=isbn))
 
-    def create_novel(self, title, author, isbn):
+    def create_novel(self, title, author, isbn, price=0):
         if self.can_create_book(title, isbn):
-            new_book = Fiction(title, author, isbn)
+            new_book = Fiction(title, author, isbn, price)
             return new_book
         print("Error when trying to create a new novel ({title},{isbn}): Book with same ISBN already exists.".format(
             title=title, isbn=isbn))
 
-    def create_non_fiction(self, title, subject, level, isbn):
+    def create_non_fiction(self, title, subject, level, isbn, price=0):
         if self.can_create_book(title, isbn):
-            new_book = NonFiction(title, subject, level, isbn)
+            new_book = NonFiction(title, subject, level, isbn, price)
             return new_book
         print(
             "Error when trying to create a new non fiction book ({title},{isbn}): Book with same ISBN already exists.".format(
@@ -171,8 +175,15 @@ class TomeRater:
             for book in user_books:
                 self.add_book_to_user(book, email, book.get_average_rating())
 
+    #If n is 0 or less or bigger than amount of books, all books will be returned as sorted list
     def get_n_most_read_books(self, n):
-        pass
+        sorted_list = []
+        for book, counter in sorted(self.books.items(), key=lambda item: item[1]):
+            sorted_list.append([book, counter])
+        if 0 < n > len(self.books):
+            n = len(self.books)
+        sorted_list.reverse()
+        return sorted_list[:n]
 
     def get_n_most_prolific_readers(self, n):
         pass
