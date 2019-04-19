@@ -175,7 +175,7 @@ class TomeRater:
             for book in user_books:
                 self.add_book_to_user(book, email, book.get_average_rating())
 
-    #If n is 0 or less or bigger than amount of books, all books will be returned as sorted list
+    # If n is 0 or less or bigger than amount of books, all books will be returned as sorted list
     def get_n_most_read_books(self, n):
         sorted_list = []
         for book, counter in sorted(self.books.items(), key=lambda item: item[1]):
@@ -189,7 +189,16 @@ class TomeRater:
         pass
 
     def get_n_most_expensive_books(self, n):
-        pass
+        book_price_dict = {}
+        sorted_list = []
+        for book, counter in self.books.items():
+            book_price_dict[book] = book.get_price()
+        for book, price in sorted(book_price_dict.items(), key=lambda item: item[1]):
+            sorted_list.append([book, book.get_price()])
+        if 0 < n > len(self.books):
+            n = len(self.books)
+        sorted_list.reverse()
+        return sorted_list[:n]
 
     def get_worth_of_user(self, email):
         pass
@@ -235,7 +244,7 @@ class TomeRater:
 
     def __repr__(self):
         return "TomeRater - Users {user_count}. Books {books_count}".format(user_count=len(self.users),
-                                                                          books_count=len(self.books))
+                                                                            books_count=len(self.books))
 
     # If users and books matches it is considered as equal
     def __eq__(self, other):
