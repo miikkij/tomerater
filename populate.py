@@ -8,7 +8,9 @@ print("\nTest case: Few broken books created")
 book_error = Tome_Rater.create_book("Society of Mind", None)  # ISBN missing - error
 book_error2 = Tome_Rater.create_book(12345, 12345)  # Book name is not a string
 book1 = Tome_Rater.create_book("Society of Mind", 12345678)
+print(book1)
 book2 = Tome_Rater.create_book("Food for coders", 84372672, 2.54)
+print(book2)
 book3 = Tome_Rater.create_book("Loops and hoops", 385874323, 64.42)
 novel1 = Tome_Rater.create_novel("Alice In Wonderland", "Lewis Carroll", 12345)
 novel1.set_isbn(9781536831139)
